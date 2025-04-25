@@ -15,7 +15,7 @@
 
   <style>
     :root{
-      /* light theme vars */
+      /* light theme */
       --brand:#fbbf24;
       --brand-dark:#92400e;
       --bg:#f5f7fa;
@@ -23,14 +23,13 @@
       --text:#111827;
       --text-muted:#4b5563;
       --hero-grad:linear-gradient(135deg,var(--brand) 0%,#fde68a 100%);
-      --neon:#00ffff;
+      --neon:#38bdf8; /* cyan */
     }
     body.dark{
       --bg:#0d0d0d;
       --card-bg:#1a1a1a;
       --text:#f3f4f6;
       --text-muted:#9ca3af;
-      --brand:#fbbf24;
       --hero-grad:radial-gradient(circle at top,var(--brand) 0%,#3d1e00 100%);
     }
 
@@ -44,31 +43,23 @@
     }
     a{text-decoration:none;color:inherit}
 
-    /* Header */
     header{background:var(--card-bg);box-shadow:0 2px 8px rgba(0,0,0,.06);position:sticky;top:0;z-index:100;transition:background .3s}
     .nav{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:.75rem 1rem}
     .logo{font-size:1.5rem;font-weight:600;color:var(--brand-dark);display:flex;align-items:center;gap:.4rem;transition:color .3s}
     .logo span{color:var(--text)}
     nav ul{display:flex;gap:1.5rem;list-style:none;font-size:1rem}
     nav li:hover{color:var(--brand-dark);cursor:pointer}
-
-    /* Dark mode toggle button */
     #modeToggle{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text);transition:transform .2s}
     #modeToggle:hover{transform:scale(1.15)}
 
-    /* Hero */
     .hero{background:var(--hero-grad);padding:6rem 1rem 5rem;text-align:center;transition:background .3s}
-    .hero h1{font-size:3rem;font-weight:600;margin-bottom:1rem;color:var(--text);transition:color .3s,text-shadow .3s}
-    body.dark .hero h1{
-      color:var(--neon);
-      text-shadow:0 0 6px var(--neon),0 0 12px var(--neon),0 0 25px var(--neon);
-    }
+    .hero h1{font-size:3rem;font-weight:600;margin-bottom:1rem;color:var(--text);transition:color .3s text-shadow .3s}
+    body.dark .hero h1{color:var(--neon);text-shadow:0 0 6px var(--neon),0 0 12px var(--neon),0 0 25px var(--neon)}
     .hero p{font-size:1.25rem;color:#513c06;max-width:600px;margin:0 auto 2rem}
     body.dark .hero p{color:var(--text-muted)}
     .cta-btn{background:var(--brand-dark);color:#fff;padding:.75rem 1.5rem;border-radius:.5rem;font-weight:600;transition:background .2s}
     .cta-btn:hover{background:#78350f}
 
-    /* Main */
     main{max-width:1000px;margin:-4rem auto 3rem;padding:0 1rem}
     .section{background:var(--card-bg);border-radius:1rem;box-shadow:0 4px 20px rgba(0,0,0,.06);padding:2.5rem 2rem;margin-bottom:2rem;transition:background .3s,color .3s}
     .section h2{font-size:1.75rem;margin-bottom:1rem}
@@ -76,11 +67,7 @@
     .faves-list{list-style:disc inside;font-size:1.05rem;color:var(--text-muted);max-width:60ch;margin:0 auto;padding-left:0}
     .faves-list li{margin:.75rem 0}
     .faves-list span{display:block;font-size:.95rem;color:var(--text-muted)}
-
-    /* Map */
     #map{height:400px;border-radius:1rem;margin-top:1.5rem}
-
-    /* Footer */
     footer{text-align:center;padding:1.5rem 1rem 2rem;font-size:.9rem;color:var(--text-muted)}
   </style>
 </head>
@@ -129,33 +116,38 @@
 
   <footer>© 2025 BeerMe.uk – Built with 🍺 &amp; ❤️ by Tom Moncrief</footer>
 
-  <!-- Leaflet JS -->
+  <!-- JS -->
   <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    // Dark-mode toggle logic
-    const toggle = document.getElementById('modeToggle');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const stored = localStorage.getItem('beerme-theme');
-    if (stored === 'dark' || (!stored && prefersDark)) document.body.classList.add('dark');
-    toggle.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    // ------- THEME TOGGLE -------
+    (function(){
+      const btn = document.getElementById('modeToggle');
+      const stored = localStorage.getItem('beerme-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if(stored==='dark'||(!stored&&prefersDark)) document.body.classList.add('dark');
+      btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+      btn.addEventListener('click',()=>{
+        document.body.classList.toggle('dark');
+        const dark = document.body.classList.contains('dark');
+        btn.textContent = dark ? '☀️' : '🌙';
+        localStorage.setItem('beerme-theme',dark?'dark':'light');
+      });
+    })();
 
-    toggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-      const dark = document.body.classList.contains('dark');
-      toggle.textContent = dark ? '☀️' : '🌙';
-      localStorage.setItem('beerme-theme', dark ? 'dark' : 'light');
-    });
-
-    // Leaflet map
-    document.addEventListener('DOMContentLoaded', () => {
-      const map = L.map('map').setView([51.462, -2.603], 14);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+    // ------- MAP -------
+    document.addEventListener('DOMContentLoaded',()=>{
+      const map = L.map('map').setView([51.462,-2.603],14);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        maxZoom:19,
+        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
       }).addTo(map);
-      const pubs = [
-        { name: 'The Commercial Rooms', coords: [51.4545, -2.5942], desc: 'Historic Wetherspoons with cheap pints.' },
-        { name: 'The White Bear',        coords: [51.4630, -2.6027], desc: 'Cosy pub near uni with local ales.' },
-        { name: 'Steam',                 coords: [51.4646, -2.6109], desc: 'Huge terrace & rotating craft taps.' }
+      const pubs=[
+        {name:'The Commercial Rooms',coords:[51.4545,-2.5942],desc:'Historic Wetherspoons with cheap pints.'},
+        {name:'The White Bear',coords:[51.4630,-2.6027],desc:'Cosy pub near uni with local ales.'},
+        {name:'Steam',coords:[51.4646,-2.6109],desc:'Huge terrace & rotating craft taps.'}
       ];
-      pubs.forEach(p => L.marker(p.
+      pubs.forEach(p=>L.marker(p.coords).addTo(map).bindPopup(`<b>${p.name}</b><br>${p.desc}`));
+    });
+  </script>
+</body>
+</html>
