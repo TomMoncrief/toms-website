@@ -3,54 +3,52 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tom's Website</title>
+  <title>BeerMe</title>
   <style>
     * { box-sizing: border-box; }
     body {
       margin: 0;
+      padding: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-      display: grid;
-      place-content: center;
-      min-height: 100vh;
       background: #f5f7fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
     }
 
     main {
       text-align: center;
-      padding: 2rem 3rem;
+      padding: 3rem 2rem;
       background: #ffffff;
-      border-radius: 1rem;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
     }
 
     h1 {
-      margin: 0 0 1rem;
-      font-size: 2.25rem;
-      line-height: 1.2;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #111827;
     }
 
     p {
-      font-size: 1.1rem;
-      color: #555;
+      font-size: 1.25rem;
+      color: #4b5563;
+      margin-top: 0;
     }
 
-    a.repo {
-      display: inline-block;
-      margin-top: 1.5rem;
-      text-decoration: none;
-      font-weight: 600;
-      color: #2563eb;
-    }
-    a.repo:hover {
-      text-decoration: underline;
+    .beer-emoji {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
     }
   </style>
 </head>
 <body>
   <main>
-    <h1>Welcome to Tom’s Website 🌐</h1>
-    <p>This is my space on the internet. More coming soon...</p>
-    <a class="repo" href="https://github.com/TomMoncrief/toms-website" target="_blank" rel="noopener">See the source on GitHub ↗</a>
+    <div class="beer-emoji">🍺</div>
+    <h1>BeerMe</h1>
+    <p>The only place to provide you with cheap beer</p>
   </main>
 </body>
 </html>
