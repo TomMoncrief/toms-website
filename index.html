@@ -10,6 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
   <style>
     :root{
       --brand:#fbbf24;
@@ -49,6 +52,8 @@
     .faves-list{list-style:disc inside;font-size:1.05rem;color:var(--text-muted);max-width:60ch;margin:0 auto;padding-left:0}
     .faves-list li{margin:.75rem 0}
     .faves-list span{display:block;font-size:.95rem;color:var(--text-muted)}
+
+    #map{height:400px;border-radius:1rem;margin-top:1.5rem}
 
     footer{text-align:center;padding:1.5rem 1rem 2rem;font-size:.9rem;color:var(--text-muted)}
   </style>
@@ -92,9 +97,12 @@
         </li>
         <li>
           <strong>Steam – Bristol</strong>
-          <span>Lively bar at Clifton Down Station boasting a huge outdoor terrace and rotating craft‑beer taps.</span>
+          <span>Lively bar at Clifton Down Station boasting a huge outdoor terrace and rotating craft-beer taps.</span>
         </li>
       </ul>
+
+      <!-- Interactive map below -->
+      <div id="map"></div>
     </section>
 
     <section id="contact" class="section">
@@ -106,5 +114,45 @@
   <footer>
     © 2025 BeerMe.uk – Built with 🍺 &amp; ❤️ by Tom Moncrief
   </footer>
+
+  <!-- Leaflet JS -->
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Create the map centred on Bristol
+      const map = L.map("map").setView([51.455, -2.587], 13);
+
+      // 2. Add OpenStreetMap tiles
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+      }).addTo(map);
+
+      // 3. Favourite pubs array
+      const pubs = [
+        {
+          name: "The Commercial Rooms",
+          coords: [51.4545, -2.5942],
+          desc: "Historic Wetherspoons with cheap pints."
+        },
+        {
+          name: "The White Bear",
+          coords: [51.4627, -2.6004],
+          desc: "Cosy pub near uni with local ales."
+        },
+        {
+          name: "Steam",
+          coords: [51.4603, -2.6125],
+          desc: "Huge terrace & rotating craft taps."
+        }
+      ];
+
+      pubs.forEach(p =>
+        L.marker(p.coords)
+          .addTo(map)
+          .bindPopup(`<b>${p.name}</b><br>${p.desc}`)
+      );
+    });
+  </script>
 </body>
 </html>
