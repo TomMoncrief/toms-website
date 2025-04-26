@@ -67,7 +67,7 @@ modeBtn.addEventListener('click',()=>{const d=document.body.classList.toggle('da
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
 (async()=>{
-  const repo="TomMoncrief/beerme.uk"; // 👈 change if your repo name or owner differ
+  const repo="TomMoncrief/toms-website"; // 👈 change if your repo name or owner differ
   const api=`https://api.github.com/repos/${repo}/contents/blog`;
   const list=await fetch(api).then(r=>r.json());
 
