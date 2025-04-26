@@ -260,21 +260,43 @@ window.addEventListener('DOMContentLoaded', () => {
   <button id="accept-cookies" style="background:var(--brand-dark);color:#fff;padding:0.5rem 1.25rem;margin-top:0.5rem;border:none;border-radius:8px;cursor:pointer;font-weight:600;box-shadow:0 2px 4px rgba(0,0,0,0.1);">Sounds good 👍</button>
 </div>
   <script>
-  if ("geolocation" in navigator) {
+window.addEventListener('DOMContentLoaded', () => {
+  if ('geolocation' in navigator) {
     navigator.geolocation.getCurrentPosition(
-      function(position) {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        console.log(`User location: ${latitude}, ${longitude}`);
-        // You can now use these coordinates in your code
+      (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        console.log(`User location: ${lat}, ${lon}`);
+        // You can later use this lat/lon to show nearby pubs!
       },
-      function(error) {
-        console.error("Error getting location:", error.message);
+      (error) => {
+        // User denied or there was an issue
+        const fallback = document.createElement('div');
+        fallback.style.position = 'fixed';
+        fallback.style.bottom = '20px';
+        fallback.style.left = '50%';
+        fallback.style.transform = 'translateX(-50%)';
+        fallback.style.background = 'var(--card)';
+        fallback.style.color = 'var(--text)';
+        fallback.style.padding = '1rem 1.5rem';
+        fallback.style.borderRadius = '8px';
+        fallback.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+        fallback.style.fontSize = '1rem';
+        fallback.style.zIndex = '9999';
+        fallback.innerHTML = '⚡ Location access blocked. We can\'t find nearby pints without it! 🍻';
+
+        document.body.appendChild(fallback);
+
+        // Auto-hide the message after 6 seconds
+        setTimeout(() => {
+          fallback.remove();
+        }, 6000);
       }
     );
   } else {
-    console.error("Geolocation is not supported by this browser.");
+    console.log('Geolocation not available.');
   }
+});
 </script>
 </body>
 </html>
