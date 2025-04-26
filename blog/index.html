@@ -14,7 +14,7 @@
     body{font-family:'Poppins',system-ui,sans-serif;background:var(--bg);color:var(--text);transition:background .3s,color .3s;}
     a{text-decoration:none;color:inherit}
     /* header */
-    header{background:var(--card);box-shadow:0 2px 8px rgba(0,0,0,.08);border-top:4px solid var(--brand);padding:.75rem 1rem;position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;}
+    header{background:var(--card);border-top:4px solid var(--brand);box-shadow:0 2px 8px rgba(0,0,0,.08);padding:.75rem 1rem;position:sticky;top:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;}
     .logo{font-size:1.5rem;font-weight:600;display:flex;align-items:center;gap:.4rem;color:var(--brand-dark);} .logo span{color:var(--text)}
     nav ul{list-style:none;display:flex;gap:1.5rem;font-weight:500}
     nav a:hover{color:var(--brand-dark)}
@@ -35,20 +35,20 @@
 </head>
 <body>
   <header>
-    <a href="index.html" class="logo">🍺 <span>BeerMe</span></a>
+    <a href="/" class="logo">🍺 <span>BeerMe</span></a>
     <nav>
       <ul>
-        <li><a href="index.html#about">About</a></li>
-        <li><a href="index.html#favourites">Favourites</a></li>
-        <li><a href="index.html#recommended">Recommended</a></li>
-        <li><a href="social.html">Social</a></li>
-        <li><a href="blog/">Blog</a></li>
-        <li><a href="index.html#contact">Contact</a></li>
+        <li><a href="/#about">About</a></li>
+        <li><a href="/#favourites">Favourites</a></li>
+        <li><a href="/#recommended">Recommended</a></li>
+        <li><a href="/social.html">Social</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/#contact">Contact</a></li>
       </ul>
     </nav>
     <button id="modeToggle" aria-label="Toggle theme">🌙</button>
   </header>
-  
+
   <main>
     <h1>🍻 Community Feed</h1>
     <div id="feed" class="feed">Loading…</div>
@@ -67,32 +67,38 @@ modeBtn.addEventListener('click',()=>{const d=document.body.classList.toggle('da
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
 (async()=>{
-  const repo="TomMoncrief/beerme.uk"; // TODO: change to your exact repo if different
-  const list=await fetch(`https://api.github.com/repos/${repo}/contents/blog`).then(r=>r.json());
-  const mdFiles=list.filter(f=>f.name.endsWith('.md')).reverse();
+  const repo="TomMoncrief/beerme.uk"; // 👈 change if your repo name or owner differ
+  const api=`https://api.github.com/repos/${repo}/contents/blog`;
+  const list=await fetch(api).then(r=>r.json());
+
+  const mdFiles=list.filter(f=>f.name.endsWith('.md')).reverse(); // newest first
   const feed=document.getElementById('feed');
   feed.innerHTML='';
+
   for(const f of mdFiles){
     const raw=await fetch(f.download_url).then(r=>r.text());
     let title=f.name.replace('.md','');
     let date='';
     let body=raw;
     let image='images/placeholder.jpg';
-    const fm=/^---([\s\S]*?)---/.exec(raw);
+
+    const fm=/^---([\s\S]*?)---/m.exec(raw);
     if(fm){
       fm[1].trim().split(/\r?\n/).forEach(line=>{
         const [k,...rest]=line.split(':');
         const v=rest.join(':').trim();
-        if(k==='title')title=v.replace(/^"|"$/g,'');
-        if(k==='date') date=v;
+        if(k==='title') title=v.replace(/^"|"$/g,'');
+        if(k==='date')  date=v;
         if(k==='image') image=v;
       });
       body=raw.slice(fm[0].length);
     }
-    const imgMatch=body.match(/!\[[^\]]*\]\(([^)]+)\)/);
-    if(imgMatch)image=imgMatch[1];
+    const imgInBody=body.match(/!\[[^\]]*\]\(([^)]+)\)/);
+    if(imgInBody) image=imgInBody[1];
+
     const html=marked.parse(body);
-    const excerpt=html.replace(/<[^>]+>/g,'').split(/\s+/).slice(0,25).join(' ')+'…';
+    const excerpt=html.replace(/<[^>]+>/g,'').split(/\s+/).slice(0,35).join(' ')+'…';
+
     feed.insertAdjacentHTML('beforeend',`
       <article class="card">
         <img src="${image}" alt="${title}">
