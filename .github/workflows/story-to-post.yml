@@ -1,0 +1,32 @@
+name: Story to Blog Post
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  build:
+    if: github.event.label.name == 'approved'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write      # allows pushing back to repo
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Extract issue body → markdown file
+        id: makefile
+        run: |
+          TITLE=$(echo "${{ github.event.issue.title }}" | sed 's/[\\/:*?\"<>|]/-/g')
+          DATE=$(date +%Y-%m-%d)
+          SLUG="${DATE}-${TITLE// /-}.md"
+          BODY="$(echo "${{ github.event.issue.body }}" | sed 's/\"/\\\"/g')"
+          echo -e "---\ntitle: \"${{ github.event.issue.title }}\"\ndate: ${DATE}\n---\n\n${BODY}" > blog/"$SLUG"
+          echo "::set-output name=file::$SLUG"
+
+      - name: Commit and push
+        run: |
+          git config user.name "StoryBot"
+          git config user.email "bot@noreply.github.com"
+          git add blog/
+          git commit -m "New story: ${{ steps.makefile.outputs.file }}" || echo "No changes"
+          git push
