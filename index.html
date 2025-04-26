@@ -213,10 +213,11 @@
 
       // Map init
       const map = L.map('map', {scrollWheelZoom:false}).setView([51.462, -2.603], 14);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom:19,
-        attribution:'© OpenStreetMap'
-      }).addTo(map);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; OpenStreetMap contributors & CartoDB',
+  subdomains: 'abcd',
+  maxZoom: 19
+}).addTo(map);
       const pubs = [
         {name:'The Commercial Rooms', coords:[51.4545,-2.5942], desc:'Historic Wetherspoons with cheap pints.'},
         {name:'The White Bear',        coords:[51.4630,-2.6027], desc:'Cosy pub near uni with local ales.'},
