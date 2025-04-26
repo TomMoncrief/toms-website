@@ -212,19 +212,48 @@
       });
 
       // Map init
-      const map = L.map('map', {scrollWheelZoom:false}).setView([51.462, -2.603], 14);
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; OpenStreetMap contributors & CartoDB',
-  subdomains: 'abcd',
-  maxZoom: 19
-}).addTo(map);
-      const pubs = [
-        {name:'The Commercial Rooms', coords:[51.4545,-2.5942], desc:'Historic Wetherspoons with cheap pints.'},
-        {name:'The White Bear',        coords:[51.4630,-2.6027], desc:'Cosy pub near uni with local ales.'},
-        {name:'Steam',                 coords:[51.4646,-2.6109], desc:'Huge terrace & rotating craft taps.'}
-      ];
-      pubs.forEach(p => L.marker(p.coords).addTo(map).bindPopup(`<b>${p.name}</b><br>${p.desc}`));
-    });
+      window.addEventListener('DOMContentLoaded', () => {
+  const map = L.map('map', { scrollWheelZoom: false }).setView([51.462, -2.603], 14);
+
+  const lightTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap contributors & CartoDB',
+    subdomains: 'abcd',
+    maxZoom: 19
+  });
+
+  const darkTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap contributors & CartoDB',
+    subdomains: 'abcd',
+    maxZoom: 19
+  });
+
+  // Detect initial mode
+  if (document.body.classList.contains('dark')) {
+    darkTiles.addTo(map);
+  } else {
+    lightTiles.addTo(map);
+  }
+
+  // Watch for mode changes
+  const modeToggle = document.getElementById('modeToggle');
+  modeToggle.addEventListener('click', () => {
+    if (document.body.classList.contains('dark')) {
+      map.removeLayer(lightTiles);
+      darkTiles.addTo(map);
+    } else {
+      map.removeLayer(darkTiles);
+      lightTiles.addTo(map);
+    }
+  });
+
+  // Add your pub markers (this part stays the same!)
+  const pubs = [
+    { name: 'The Commercial Rooms', coords: [51.4545, -2.5942], desc: 'Historic Wetherspoons with cheap pints.' },
+    { name: 'The White Bear', coords: [51.4630, -2.6027], desc: 'Cosy pub near uni with local ales.' },
+    { name: 'Steam', coords: [51.4646, -2.6109], desc: 'Huge terrace & rotating craft taps.' }
+  ];
+  pubs.forEach(p => L.marker(p.coords).addTo(map).bindPopup(`<b>${p.name}</b><br>${p.desc}`));
+});
   </script>
   <div id="cookie-consent" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);color:var(--text);padding:1rem 1.5rem;text-align:center;box-shadow:0 -2px 10px rgba(0,0,0,.1);z-index:3000;font-size:0.95rem;">
   🍪 We use cookies to improve your experience and analyse site traffic.
