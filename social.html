@@ -113,6 +113,15 @@
     localStorage.setItem('beerme-theme', isDark ? 'dark' : 'light');
   });
 </script>
+  <script>
+  const savedLat = localStorage.getItem('user-lat');
+  const savedLon = localStorage.getItem('user-lon');
+
+  if (savedLat && savedLon) {
+    console.log(`Saved location: ${savedLat}, ${savedLon}`);
+    // Later you could use this to find nearest pubs, etc!
+  }
+</script>
 </body>
 </html>
 
