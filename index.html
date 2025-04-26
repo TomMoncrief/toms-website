@@ -267,10 +267,12 @@ window.addEventListener('DOMContentLoaded', () => {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
         console.log(`User location: ${lat}, ${lon}`);
-        // You can later use this lat/lon to show nearby pubs!
+        
+        // 🔥 Save it
+        localStorage.setItem('user-lat', lat);
+        localStorage.setItem('user-lon', lon);
       },
       (error) => {
-        // User denied or there was an issue
         const fallback = document.createElement('div');
         fallback.style.position = 'fixed';
         fallback.style.bottom = '20px';
@@ -284,13 +286,8 @@ window.addEventListener('DOMContentLoaded', () => {
         fallback.style.fontSize = '1rem';
         fallback.style.zIndex = '9999';
         fallback.innerHTML = '⚡ Location access blocked. We can\'t find nearby pints without it! 🍻';
-
         document.body.appendChild(fallback);
-
-        // Auto-hide the message after 6 seconds
-        setTimeout(() => {
-          fallback.remove();
-        }, 6000);
+        setTimeout(() => { fallback.remove(); }, 6000);
       }
     );
   } else {
