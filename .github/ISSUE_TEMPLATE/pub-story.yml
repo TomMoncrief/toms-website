@@ -1,0 +1,27 @@
+name: Pub Story 🍻
+description: Share your best (or worst!) pub experience.
+title: "[PUB STORY] <your catchy title>"
+labels: ["story"]
+body:
+  - type: textarea
+    id: story
+    attributes:
+      label: Tell us your tale
+      description: Markdown supported. Feel free to add image links!
+      placeholder: "It was a rainy night in Bristol…"
+    validations:
+      required: true
+  - type: input
+    id: pub
+    attributes:
+      label: Pub name + City
+      placeholder: "The White Bear, Bristol"
+    validations:
+      required: true
+  - type: dropdown
+    id: rating
+    attributes:
+      label: Pint-Glass Rating (1 = bad, 5 = amazing)
+      options: ["1","2","3","4","5"]
+    validations:
+      required: true
