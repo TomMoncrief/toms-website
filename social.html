@@ -1,9 +1,138 @@
 <!DOCTYPE html>
-<html>
-  <head><title>BeerMe | Social</title></head>
-  <body>
-    <h1>This is the Social page 🍻</h1>
-    <p>Links to our TikTok, Insta, YouTube go here.</p>
-    <a href="index.html">← Back to Home</a>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BeerMe | Social</title>
+
+  <!-- Fonts and Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --brand: #fbbf24;
+      --brand-dark: #92400e;
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #4b5563;
+      --hero-grad: linear-gradient(135deg,var(--brand) 0%,#fde68a 100%);
+    }
+    body.dark {
+      --bg: #0d0d0d;
+      --card: #1a1a1a;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --hero-grad: radial-gradient(circle at top,var(--brand) 0%,#3d1e00 100%);
+    }
+    body {
+      font-family: 'Poppins', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
+      transition: background .3s, color .3s;
+    }
+    header {
+      background: var(--card);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 0.75rem 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-weight: 600;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      color: var(--brand-dark);
+    }
+    .logo span { color: var(--text); }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+    }
+    nav a:hover {
+      color: var(--brand-dark);
+    }
+    #modeToggle {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+    main {
+      padding: 3rem 1rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    p {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+      color: var(--muted);
+    }
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      padding: 2rem 1rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">🍺 <span>BeerMe</span></a>
+    <nav>
+      <ul>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#favourites">Favourites</a></li>
+        <li><a href="index.html#recommended">Recommended</a></li>
+        <li><a href="social.html">Social</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <button id="modeToggle" aria-label="Toggle Theme">🌙</button>
+  </header>
+
+  <main>
+    <h1>🍻 Join the BeerMe Social!</h1>
+    <p>Coming soon: events, pub meetups, and ways to connect with fellow beer lovers.</p>
+  </main>
+
+  <footer>© 2025 BeerMe.uk – Built with 🍺 & ❤️ by Tom Moncrief</footer>
+
+  <script>
+    // Theme toggle
+    const modeBtn = document.getElementById('modeToggle');
+    if (localStorage.getItem('beerme-theme') === 'dark') document.body.classList.add('dark');
+    modeBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+    modeBtn.addEventListener('click', () => {
+      const isDark = document.body.classList.toggle('dark');
+      modeBtn.textContent = isDark ? '☀️' : '🌙';
+      localStorage.setItem('beerme-theme', isDark ? 'dark' : 'light');
+    });
+  </script>
+</body>
 </html>
