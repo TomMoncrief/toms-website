@@ -183,36 +183,46 @@
   <footer>© 2025 BeerMe.uk – Built with 🍺 & ❤️ by Tom Moncrief</footer>
 
   <!-- Leaflet JS -->
-  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script defer>
-    window.addEventListener('DOMContentLoaded', () => {
-      // Theme toggle
-      const modeBtn = document.getElementById('modeToggle');
-      if (localStorage.getItem('beerme-theme') === 'dark') document.body.classList.add('dark');
-      modeBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
-      modeBtn.onclick = () => {
-        const isDark = document.body.classList.toggle('dark');
-        modeBtn.textContent = isDark ? '☀️' : '🌙';
-        localStorage.setItem('beerme-theme', isDark ? 'dark' : 'light');
-      };
+<script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script defer>
+window.addEventListener('DOMContentLoaded', () => {
+  // Theme toggle
+  const modeBtn = document.getElementById('modeToggle');
+  if (localStorage.getItem('beerme-theme') === 'dark') document.body.classList.add('dark');
+  modeBtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+  modeBtn.onclick = () => {
+    const isDark = document.body.classList.toggle('dark');
+    modeBtn.textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('beerme-theme', isDark ? 'dark' : 'light');
 
-      // Burger nav toggle
-      const burger = document.querySelector('.burger');
-      const nav = document.querySelector('nav');
-      burger.onclick = () => nav.classList.toggle('open');
+    // Map style switch
+    if (map) {
+      if (isDark) {
+        map.removeLayer(lightTiles);
+        darkTiles.addTo(map);
+      } else {
+        map.removeLayer(darkTiles);
+        lightTiles.addTo(map);
+      }
+    }
+  };
 
-      // Header hide/show on scroll
-      const header = document.getElementById('site-header');
-      let lastY = window.pageYOffset;
-      window.addEventListener('scroll', () => {
-        const st = window.pageYOffset;
-        if (st > lastY + 50) header.style.transform = 'translateY(-100%)';
-        else if (st < lastY - 50) header.style.transform = 'translateY(0)';
-        lastY = st;
-      });
+  // Burger nav toggle
+  const burger = document.querySelector('.burger');
+  const nav = document.querySelector('nav');
+  burger.onclick = () => nav.classList.toggle('open');
 
-      // Map init
-      window.addEventListener('DOMContentLoaded', () => {
+  // Header hide/show on scroll
+  const header = document.getElementById('site-header');
+  let lastY = window.pageYOffset;
+  window.addEventListener('scroll', () => {
+    const st = window.pageYOffset;
+    if (st > lastY + 50) header.style.transform = 'translateY(-100%)';
+    else if (st < lastY - 50) header.style.transform = 'translateY(0)';
+    lastY = st;
+  });
+
+  // Map init
   const map = L.map('map', { scrollWheelZoom: false }).setView([51.462, -2.603], 14);
 
   const lightTiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -234,19 +244,7 @@
     lightTiles.addTo(map);
   }
 
-  // Watch for mode changes
-  const modeToggle = document.getElementById('modeToggle');
-  modeToggle.addEventListener('click', () => {
-    if (document.body.classList.contains('dark')) {
-      map.removeLayer(lightTiles);
-      darkTiles.addTo(map);
-    } else {
-      map.removeLayer(darkTiles);
-      lightTiles.addTo(map);
-    }
-  });
-
-  // Add your pub markers (this part stays the same!)
+  // Add pub markers
   const pubs = [
     { name: 'The Commercial Rooms', coords: [51.4545, -2.5942], desc: 'Historic Wetherspoons with cheap pints.' },
     { name: 'The White Bear', coords: [51.4630, -2.6027], desc: 'Cosy pub near uni with local ales.' },
@@ -254,7 +252,7 @@
   ];
   pubs.forEach(p => L.marker(p.coords).addTo(map).bindPopup(`<b>${p.name}</b><br>${p.desc}`));
 });
-  </script>
+</script>
   <div id="cookie-consent" style="display:none;position:fixed;bottom:0;left:0;right:0;background:var(--card);color:var(--text);padding:1rem 1.5rem;text-align:center;box-shadow:0 -2px 10px rgba(0,0,0,.1);z-index:3000;font-size:0.95rem;">
   🍪 We use cookies to improve your experience and analyse site traffic.
   <a href="/privacy.html" target="_blank" style="color:var(--brand-dark);margin:0 1rem;">Learn more</a>
