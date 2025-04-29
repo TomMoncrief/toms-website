@@ -17,8 +17,9 @@ jobs:
       - name: Download latest ONS pint-price JSON
         run: |
           mkdir -p data
-          curl -s "https://api.statistics.gov.uk/timeseries/CZMS?download=json" \
-               -o data/pint-price.json
+          curl -L --max-time 120 \
+               "https://api.statistics.gov.uk/timeseries/CZMS?download=json" \
+                -o data/pint-price.json
 
       - name: Commit updated data
         run: |
