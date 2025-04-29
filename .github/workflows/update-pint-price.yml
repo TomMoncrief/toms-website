@@ -1,0 +1,29 @@
+name: Update Pint Price   # appears in the Actions tab
+
+on:
+  schedule:
+    # 07:00 UTC on the 2nd day of every month
+    - cron: '0 7 2 * *'
+  workflow_dispatch:      # lets you run it manually
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write      # allows the bot to commit
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download latest ONS pint-price JSON
+        run: |
+          mkdir -p data
+          curl -s "https://api.statistics.gov.uk/timeseries/CZMS?download=json" \
+               -o data/pint-price.json
+
+      - name: Commit updated data
+        run: |
+          git config user.name "ONS-Bot"
+          git config user.email "bot@noreply.github.com"
+          git add data/pint-price.json
+          git commit -m "Update pint-price data" || echo "No changes"
+          git push
